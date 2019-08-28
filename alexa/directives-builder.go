@@ -7,7 +7,14 @@ import (
 	"os"
 )
 
+type transformer string
+
 const renderDirectiveType = "Alexa.Presentation.APL.RenderDocument"
+
+const (
+	SSMLToSpeech transformer = "ssmlToSpeech "
+	SSMLToText   transformer = "ssmlToText"
+)
 
 type Directives struct {
 	Directives []Directive
@@ -95,11 +102,10 @@ type DataSources struct {
 	TemplateData struct {
 		Properties struct {
 			BackgroundImage struct {
-				Sources []struct {
-					URL string `json:"url"`
-				} `json:"sources"`
+				Sources []ImageSource `json:"sources"`
 			} `json:"backgroundImage"`
 		} `json:"properties"`
+		Transformers []Transformer `json:"transformers,omitempty"`
 	} `json:"templateData,omitempty"`
 	BodyTemplateData struct {
 		Type            string      `json:"type"`
@@ -107,37 +113,33 @@ type DataSources struct {
 		BackgroundImage APLImage    `json:"backgroundImage,omitempty"`
 		Title           string      `json:"title,omitempty"` // Intent Response title Heading to display
 		TextContent     struct {
-			Title struct {
-				Type string `json:"type,omitempty"`
-				Text string `json:"text,omitempty"` // The text to display. Dynamically populate after reading into structs, unless always returning a single static response from your template.
-			} `json:"title,omitempty"`
-			SubTitle struct {
-				Type string `json:"type,omitempty"`
-				Text string `json:"text,omitempty"` // The text to display. Dynamically populate after reading into structs, unless always returning a single static response from your template.
-			} `json:"subtitle,omitempty"`
-			PrimaryText struct {
-				Type string `json:"type,omitempty"`
-				Text string `json:"text,omitempty"` // The text to display. Dynamically populate after reading into structs, unless always returning a single static response from your template.
-			} `json:"primaryText,omitempty"`
-			BulletPoint struct {
-				Type string `json:"type,omitempty"`
-				Text string `json:"text,omitempty"` // The text to display. Dynamically populate after reading into structs, unless always returning a single static response from your template.
-			} `json:"bulletPoint,omitempty"` // Must add the bullet character (i.e.: "•") yourself.
+			Title       TextElement `json:"title,omitempty"`
+			SubTitle    TextElement `json:"subtitle,omitempty"`
+			PrimaryText TextElement `json:"primaryText,omitempty"`
+			BulletPoint TextElement `json:"bulletPoint,omitempty"` // Must add the bullet character (i.e.: "•") yourself.
 		} `json:"textContent,omitempty"`
 		LogoURL string `json:"logoUrl,omitempty"`
 	} `json:"bodyTemplateData,omitempty"` // NOTE: Depending on the template used, i.e. from the  Alexa Developer Portal APL template generator tool, this may have a different name.
 	// TODO - create dynamic extraction/unmarshalling of this inconsistently named object source.
 }
 
+type Transformer struct {
+	InputPath   string      `json:"inputPath"`
+	OutputName  string      `json:"outputName"`
+	Transformer transformer `json:"transformer"`
+}
+
+type TextElement struct {
+	Type string `json:"type,omitempty"`
+	Text string `json:"text,omitempty"` // The text to display. Dynamically populate after reading into structs, unless always returning a single static response from your template.
+}
+
 type APLImage struct {
-	ContentDescription string `json:"contentDescription,omitempty"` // For Screen Readers. Should always be included but not "required".
-	SmallSourceURL     string `json:"smallSourceUrl,omitempty"`
-	MediumSourceURL    string `json:"mediumSourceUrl,omitempty"`
-	LargeSourceURL     string `json:"largeSourceUrl,omitempty"`
-	Sources            []struct {
-		// TODO - create builder to append new Sources/Images.
-		ImageSource ImageSource
-	} `json:"sources,omitempty"`
+	ContentDescription string        `json:"contentDescription,omitempty"` // For Screen Readers. Should always be included but not "required".
+	SmallSourceURL     string        `json:"smallSourceUrl,omitempty"`
+	MediumSourceURL    string        `json:"mediumSourceUrl,omitempty"`
+	LargeSourceURL     string        `json:"largeSourceUrl,omitempty"`
+	Sources            []ImageSource `json:"sources,omitempty"` // TODO - create builder to append new Sources/Images.
 }
 
 type ImageSource struct {
