@@ -1,10 +1,7 @@
 package alexa
 
 import (
-	"encoding/json"
 	"github.com/BHunter2889/go-alexa-devkit/alexa/apl"
-	"io/ioutil"
-	"os"
 )
 
 type transformer string
@@ -38,37 +35,6 @@ func NewBasicAPLDirectives(token string, document apl.APLDocument, sources DataS
 	return d
 }
 
-// Read from JSON File. Can't store the JSON in the binary so this is here in case you
-// want to fetch the file from somewhere else.
-func ExtractNewRenderDocDirectiveFromJson(token string, fileName string, out *Directive) error {
-	jsonFile, err := os.Open(fileName)
-	if err != nil {
-		return err
-	}
-	defer jsonFile.Close()
-
-	bytes, _ := ioutil.ReadAll(jsonFile)
-
-	if err := json.Unmarshal(bytes, &out); err != nil {
-		return err
-	}
-
-	out.Token = token
-	out.Type = renderDirectiveType
-
-	return nil
-}
-
-func ExtractNewRenderDocDirectiveFromString(token string, jsonString string, out *Directive) error {
-	if err := json.Unmarshal([]byte(jsonString), &out); err != nil {
-		return err
-	}
-	out.Token = token
-	out.Type = renderDirectiveType
-
-	return nil
-}
-
 func NewDirectivesList(title string, opts ...Directive) []Directive {
 	dl := make([]Directive, 0)
 
@@ -78,93 +44,6 @@ func NewDirectivesList(title string, opts ...Directive) []Directive {
 	}
 
 	return dl
-}
-
-type Directive struct {
-	Type          string          `json:"type"`               // i.e. "Alexa.Presentation.APL.RenderDocument"
-	Token         string          `json:"token"`              // i.e. "a-document" - string reference used to invoke subsequent directives like ExecuteCommands
-	Document      apl.APLDocument `json:"document,omitempty"` // There may be other types of documents that can go here - TODO - generify the type if this becomes apparent.
-	DataSources   DataSources     `json:"datasources,omitempty"`
-	SlotToElicit  string          `json:"slotToElicit,omitempty"`
-	UpdatedIntent *UpdatedIntent  `json:"UpdatedIntent,omitempty"`
-	PlayBehavior  string          `json:"playBehavior,omitempty"`
-	AudioItem     struct {
-		Stream struct {
-			Token                string `json:"token,omitempty"`
-			URL                  string `json:"url,omitempty"`
-			OffsetInMilliseconds int    `json:"offsetInMilliseconds,omitempty"`
-		} `json:"stream,omitempty"`
-	} `json:"audioItem,omitempty"`
-}
-
-// `json:"datasources,omitempty"`
-type DataSources struct {
-	TemplateData struct {
-		// These can have any name, any number of props you want, and aren't required.
-		// It only matters how you reference them from the APL document.
-		// Using common basic elements for now so as not to overcomplicate.
-		Properties struct {
-			BackgroundImage struct {
-				Sources []ImageSource `json:"sources"`
-			} `json:"backgroundImage,omitempty"`
-			Title   string `json:"title,omitempty"`
-			LogoURL string `json:"logoUrl,omitempty"`
-			Image   string `json:"image,omitempty"`
-			SSML    string `json:"ssml,omitempty"`
-			Text 	string `json:"text,omitempty"`
-		} `json:"properties"`
-		Transformers []Transformer `json:"transformers,omitempty"`
-	} `json:"templateData,omitempty"`
-	BodyTemplateData struct {
-		Type            string      `json:"type"`
-		ObjectID        interface{} `json:"objectId,omitempty"`
-		BackgroundImage APLImage    `json:"backgroundImage,omitempty"`
-		Title           string      `json:"title,omitempty"` // Intent Response title Heading to display
-		TextContent     struct {
-			Title       TextElement `json:"title,omitempty"`
-			SubTitle    TextElement `json:"subtitle,omitempty"`
-			PrimaryText TextElement `json:"primaryText,omitempty"`
-			BulletPoint TextElement `json:"bulletPoint,omitempty"` // Must add the bullet character (i.e.: "•") yourself.
-		} `json:"textContent,omitempty"`
-		LogoURL string `json:"logoUrl,omitempty"`
-	} `json:"bodyTemplateData,omitempty"` // NOTE: Depending on the template used, i.e. from the  Alexa Developer Portal APL template generator tool, this may have a different name.
-	// TODO - create dynamic extraction/unmarshalling of this inconsistently named object source.
-}
-
-type Transformer struct {
-	InputPath   string      `json:"inputPath"`
-	OutputName  string      `json:"outputName"`
-	Transformer transformer `json:"transformer"`
-}
-
-// Provided for maintaining consistency, ease of use. You can still implement Transformer separately.
-func NewSSMLToSpeechTransformer() Transformer {
-	return Transformer{
-		InputPath: "ssml",
-		OutputName: "speech",
-		Transformer: SSMLToSpeech,
-	}
-}
-
-// Provided for maintaining consistency, ease of use. You can still implement Transformer separately.
-func NewSSMLToTextTransformer() Transformer {
-	return Transformer{
-		InputPath: "ssml",
-		OutputName: "text",
-		Transformer: SSMLToText,
-	}
-}
-
-func NewSSMLTransformerList() []Transformer {
-	tl := make([]Transformer, 0)
-	tl = append(tl, NewSSMLToSpeechTransformer())
-	tl = append(tl, NewSSMLToTextTransformer())
-	return tl
-}
-
-type TextElement struct {
-	Type string `json:"type,omitempty"`
-	Text string `json:"text,omitempty"` // The text to display. Dynamically populate after reading into structs, unless always returning a single static response from your template.
 }
 
 type APLImage struct {
