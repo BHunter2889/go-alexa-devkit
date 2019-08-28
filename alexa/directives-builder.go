@@ -12,7 +12,7 @@ type transformer string
 const renderDirectiveType = "Alexa.Presentation.APL.RenderDocument"
 
 const (
-	SSMLToSpeech transformer = "ssmlToSpeech "
+	SSMLToSpeech transformer = "ssmlToSpeech"
 	SSMLToText   transformer = "ssmlToText"
 )
 
