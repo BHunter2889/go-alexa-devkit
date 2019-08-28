@@ -66,7 +66,7 @@ func NewDirectivesList(title string, opts ...Directive) []Directive {
 	dl := make([]Directive, 0)
 
 	for _, opt := range opts {
-		opt.DataSources.BodyTemplate1Data.Title = title
+		opt.DataSources.BodyTemplateData.Title = title
 		dl = append(dl, opt)
 	}
 
@@ -101,30 +101,50 @@ type DataSources struct {
 			} `json:"backgroundImage"`
 		} `json:"properties"`
 	} `json:"templateData,omitempty"`
-	BodyTemplate1Data struct {
+	BodyTemplateData struct {
 		Type            string      `json:"type"`
 		ObjectID        interface{} `json:"objectId,omitempty"`
-		BackgroundImage struct {
-			ContentDescription string     `json:"contentDescription,omitempty"` // For Screen Readers. Should always be included but not "required".
-			SmallSourceURL     string     `json:"smallSourceUrl,omitempty"`
-			MediumSourceURL    string     `json:"mediumSourceUrl,omitempty"`
-			LargeSourceURL     string     `json:"largeSourceUrl,omitempty"`
-			Sources            []struct { // TODO - Add Source struct and create builder to append new Sources.
-				URL          string `json:"url"`
-				Size         string `json:"size"`
-				WidthPixels  int    `json:"widthPixels,omitempty"`
-				HeightPixels int    `json:"heightPixels,omitempty"`
-			} `json:"sources,omitempty"`
-		} `json:"backgroundImage,omitempty"`
-		Title       string `json:"title,omitempty"` // Intent Response title Heading to display
-		TextContent struct {
+		BackgroundImage APLImage    `json:"backgroundImage,omitempty"`
+		Title           string      `json:"title,omitempty"` // Intent Response title Heading to display
+		TextContent     struct {
+			Title struct {
+				Type string `json:"type,omitempty"`
+				Text string `json:"text,omitempty"` // The text to display. Dynamically populate after reading into structs, unless always returning a single static response from your template.
+			} `json:"title,omitempty"`
+			SubTitle struct {
+				Type string `json:"type,omitempty"`
+				Text string `json:"text,omitempty"` // The text to display. Dynamically populate after reading into structs, unless always returning a single static response from your template.
+			} `json:"subtitle,omitempty"`
 			PrimaryText struct {
 				Type string `json:"type,omitempty"`
 				Text string `json:"text,omitempty"` // The text to display. Dynamically populate after reading into structs, unless always returning a single static response from your template.
 			} `json:"primaryText,omitempty"`
+			BulletPoint struct {
+				Type string `json:"type,omitempty"`
+				Text string `json:"text,omitempty"` // The text to display. Dynamically populate after reading into structs, unless always returning a single static response from your template.
+			} `json:"bulletPoint,omitempty"` // Must add the bullet character (i.e.: "•") yourself.
 		} `json:"textContent,omitempty"`
 		LogoURL string `json:"logoUrl,omitempty"`
-	} `json:"bodyTemplate1Data,omitempty"`
+	} `json:"bodyTemplateData,omitempty"` // NOTE: Depending on the template used, i.e. from the  Alexa Developer Portal APL template generator tool, this may have a different name.
+	// TODO - create dynamic extraction/unmarshalling of this inconsistently named object source.
+}
+
+type APLImage struct {
+	ContentDescription string `json:"contentDescription,omitempty"` // For Screen Readers. Should always be included but not "required".
+	SmallSourceURL     string `json:"smallSourceUrl,omitempty"`
+	MediumSourceURL    string `json:"mediumSourceUrl,omitempty"`
+	LargeSourceURL     string `json:"largeSourceUrl,omitempty"`
+	Sources            []struct {
+		// TODO - create builder to append new Sources/Images.
+		ImageSource ImageSource
+	} `json:"sources,omitempty"`
+}
+
+type ImageSource struct {
+	URL          string `json:"url"`
+	Size         string `json:"size"`
+	WidthPixels  int    `json:"widthPixels,omitempty"`
+	HeightPixels int    `json:"heightPixels,omitempty"`
 }
 
 type UpdatedIntent struct {
