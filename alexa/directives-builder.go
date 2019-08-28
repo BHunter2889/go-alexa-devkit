@@ -136,6 +136,24 @@ type Transformer struct {
 	Transformer transformer `json:"transformer"`
 }
 
+// Provided for maintaining consistency, ease of use. You can still implement Transformer separately.
+func NewSSMLToSpeechTransformer() Transformer {
+	return Transformer{
+		InputPath: "ssml",
+		OutputName: "speech",
+		Transformer: SSMLToSpeech,
+	}
+}
+
+// Provided for maintaining consistency, ease of use. You can still implement Transformer separately.
+func NewSSMLToTextTransformer() Transformer {
+	return Transformer{
+		InputPath: "ssml",
+		OutputName: "text",
+		Transformer: SSMLToText,
+	}
+}
+
 type TextElement struct {
 	Type string `json:"type,omitempty"`
 	Text string `json:"text,omitempty"` // The text to display. Dynamically populate after reading into structs, unless always returning a single static response from your template.
