@@ -154,6 +154,13 @@ func NewSSMLToTextTransformer() Transformer {
 	}
 }
 
+func NewSSMLTransformerList() []Transformer {
+	tl := make([]Transformer, 0)
+	tl = append(tl, NewSSMLToSpeechTransformer())
+	tl = append(tl, NewSSMLToTextTransformer())
+	return tl
+}
+
 type TextElement struct {
 	Type string `json:"type,omitempty"`
 	Text string `json:"text,omitempty"` // The text to display. Dynamically populate after reading into structs, unless always returning a single static response from your template.
