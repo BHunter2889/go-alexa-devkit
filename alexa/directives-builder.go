@@ -111,6 +111,7 @@ type DataSources struct {
 			LogoURL string `json:"logoUrl,omitempty"`
 			Image   string `json:"image,omitempty"`
 			SSML    string `json:"ssml,omitempty"`
+			Text 	string `json:"text,omitempty"`
 		} `json:"properties"`
 		Transformers []Transformer `json:"transformers,omitempty"`
 	} `json:"templateData,omitempty"`
@@ -134,6 +135,31 @@ type Transformer struct {
 	InputPath   string      `json:"inputPath"`
 	OutputName  string      `json:"outputName"`
 	Transformer transformer `json:"transformer"`
+}
+
+// Provided for maintaining consistency, ease of use. You can still implement Transformer separately.
+func NewSSMLToSpeechTransformer() Transformer {
+	return Transformer{
+		InputPath: "ssml",
+		OutputName: "speech",
+		Transformer: SSMLToSpeech,
+	}
+}
+
+// Provided for maintaining consistency, ease of use. You can still implement Transformer separately.
+func NewSSMLToTextTransformer() Transformer {
+	return Transformer{
+		InputPath: "ssml",
+		OutputName: "text",
+		Transformer: SSMLToText,
+	}
+}
+
+func NewSSMLTransformerList() []Transformer {
+	tl := make([]Transformer, 0)
+	tl = append(tl, NewSSMLToSpeechTransformer())
+	tl = append(tl, NewSSMLToTextTransformer())
+	return tl
 }
 
 type TextElement struct {
