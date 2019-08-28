@@ -2,7 +2,7 @@ package alexa
 
 import (
 	"encoding/json"
-	"github.com/BHunter2889/da-fish-alexa/alexa/apl"
+	"github.com/BHunter2889/go-alexa-devkit/alexa/apl"
 	"io/ioutil"
 	"os"
 )

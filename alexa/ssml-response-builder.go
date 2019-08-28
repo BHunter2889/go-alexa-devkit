@@ -16,6 +16,22 @@ func NewSSMLResponse(ssml string) Response {
 	return r
 }
 
+func NewSSMLResponseFromPlainText(text string) Response {
+	builder := SSMLBuilder{}
+	builder.Say(text)
+	r := Response{
+		Version: "1.0",
+		Body: ResBody{
+			OutputSpeech: &Payload{
+				Type: "SSML",
+				SSML: builder.Build(),
+			},
+			ShouldEndSession: true,
+		},
+	}
+	return r
+}
+
 func NewAPLResponse(ssml string, directives []Directive) Response {
 	r := Response{
 		Version: "1.0",
