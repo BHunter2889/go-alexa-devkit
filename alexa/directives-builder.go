@@ -107,11 +107,14 @@ type DataSources struct {
 			BackgroundImage struct {
 				Sources []ImageSource `json:"sources"`
 			} `json:"backgroundImage,omitempty"`
-			Title   string `json:"title,omitempty"`
-			LogoURL string `json:"logoUrl,omitempty"`
-			Image   string `json:"image,omitempty"`
-			SSML    string `json:"ssml,omitempty"`
-			Text 	string `json:"text,omitempty"`
+			Title       string   `json:"title,omitempty"`
+			Subtitle    string   `json:"subtitle,omitempty"`
+			PrimaryText string   `json:"primaryText,omitempty"`
+			BulletList  []string `json:"bulletList,omitempty"`
+			LogoURL     string   `json:"logoUrl,omitempty"`
+			Image       string   `json:"image,omitempty"`
+			SSML        string   `json:"ssml,omitempty"`
+			Text        string   `json:"text,omitempty"`
 		} `json:"properties"`
 		Transformers []Transformer `json:"transformers,omitempty"`
 	} `json:"templateData,omitempty"`
@@ -140,8 +143,8 @@ type Transformer struct {
 // Provided for maintaining consistency, ease of use. You can still implement Transformer separately.
 func NewSSMLToSpeechTransformer() Transformer {
 	return Transformer{
-		InputPath: "ssml",
-		OutputName: "speech",
+		InputPath:   "ssml",
+		OutputName:  "speech",
 		Transformer: SSMLToSpeech,
 	}
 }
@@ -149,8 +152,8 @@ func NewSSMLToSpeechTransformer() Transformer {
 // Provided for maintaining consistency, ease of use. You can still implement Transformer separately.
 func NewSSMLToTextTransformer() Transformer {
 	return Transformer{
-		InputPath: "ssml",
-		OutputName: "text",
+		InputPath:   "ssml",
+		OutputName:  "text",
 		Transformer: SSMLToText,
 	}
 }
