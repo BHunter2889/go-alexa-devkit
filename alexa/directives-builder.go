@@ -7,7 +7,14 @@ import (
 	"os"
 )
 
+type transformer string
+
 const renderDirectiveType = "Alexa.Presentation.APL.RenderDocument"
+
+const (
+	SSMLToSpeech transformer = "ssmlToSpeech"
+	SSMLToText   transformer = "ssmlToText"
+)
 
 type Directives struct {
 	Directives []Directive
@@ -66,7 +73,7 @@ func NewDirectivesList(title string, opts ...Directive) []Directive {
 	dl := make([]Directive, 0)
 
 	for _, opt := range opts {
-		opt.DataSources.BodyTemplate1Data.Title = title
+		opt.DataSources.BodyTemplateData.Title = title
 		dl = append(dl, opt)
 	}
 
@@ -93,38 +100,60 @@ type Directive struct {
 // `json:"datasources,omitempty"`
 type DataSources struct {
 	TemplateData struct {
+		// These can have any name, any number of props you want, and aren't required.
+		// It only matters how you reference them from the APL document.
+		// Using common basic elements for now so as not to overcomplicate.
 		Properties struct {
 			BackgroundImage struct {
-				Sources []struct {
-					URL string `json:"url"`
-				} `json:"sources"`
-			} `json:"backgroundImage"`
+				Sources []ImageSource `json:"sources"`
+			} `json:"backgroundImage,omitempty"`
+			Title   string `json:"title,omitempty"`
+			LogoURL string `json:"logoUrl,omitempty"`
+			Image   string `json:"image,omitempty"`
+			SSML    string `json:"ssml,omitempty"`
 		} `json:"properties"`
+		Transformers []Transformer `json:"transformers,omitempty"`
 	} `json:"templateData,omitempty"`
-	BodyTemplate1Data struct {
+	BodyTemplateData struct {
 		Type            string      `json:"type"`
 		ObjectID        interface{} `json:"objectId,omitempty"`
-		BackgroundImage struct {
-			ContentDescription string     `json:"contentDescription,omitempty"` // For Screen Readers. Should always be included but not "required".
-			SmallSourceURL     string     `json:"smallSourceUrl,omitempty"`
-			MediumSourceURL    string     `json:"mediumSourceUrl,omitempty"`
-			LargeSourceURL     string     `json:"largeSourceUrl,omitempty"`
-			Sources            []struct { // TODO - Add Source struct and create builder to append new Sources.
-				URL          string `json:"url"`
-				Size         string `json:"size"`
-				WidthPixels  int    `json:"widthPixels,omitempty"`
-				HeightPixels int    `json:"heightPixels,omitempty"`
-			} `json:"sources,omitempty"`
-		} `json:"backgroundImage,omitempty"`
-		Title       string `json:"title,omitempty"` // Intent Response title Heading to display
-		TextContent struct {
-			PrimaryText struct {
-				Type string `json:"type,omitempty"`
-				Text string `json:"text,omitempty"` // The text to display. Dynamically populate after reading into structs, unless always returning a single static response from your template.
-			} `json:"primaryText,omitempty"`
+		BackgroundImage APLImage    `json:"backgroundImage,omitempty"`
+		Title           string      `json:"title,omitempty"` // Intent Response title Heading to display
+		TextContent     struct {
+			Title       TextElement `json:"title,omitempty"`
+			SubTitle    TextElement `json:"subtitle,omitempty"`
+			PrimaryText TextElement `json:"primaryText,omitempty"`
+			BulletPoint TextElement `json:"bulletPoint,omitempty"` // Must add the bullet character (i.e.: "•") yourself.
 		} `json:"textContent,omitempty"`
 		LogoURL string `json:"logoUrl,omitempty"`
-	} `json:"bodyTemplate1Data,omitempty"`
+	} `json:"bodyTemplateData,omitempty"` // NOTE: Depending on the template used, i.e. from the  Alexa Developer Portal APL template generator tool, this may have a different name.
+	// TODO - create dynamic extraction/unmarshalling of this inconsistently named object source.
+}
+
+type Transformer struct {
+	InputPath   string      `json:"inputPath"`
+	OutputName  string      `json:"outputName"`
+	Transformer transformer `json:"transformer"`
+}
+
+type TextElement struct {
+	Type string `json:"type,omitempty"`
+	Text string `json:"text,omitempty"` // The text to display. Dynamically populate after reading into structs, unless always returning a single static response from your template.
+}
+
+type APLImage struct {
+	ContentDescription string        `json:"contentDescription,omitempty"` // For Screen Readers. Should always be included but not "required".
+	SmallSourceURL     string        `json:"smallSourceUrl,omitempty"`
+	MediumSourceURL    string        `json:"mediumSourceUrl,omitempty"`
+	LargeSourceURL     string        `json:"largeSourceUrl,omitempty"`
+	Sources            []ImageSource `json:"sources,omitempty"` // TODO - create builder to append new Sources/Images.
+}
+
+type ImageSource struct {
+	URL          string `json:"url"`
+	Size         string `json:"size"`
+	WidthPixels  int    `json:"widthPixels,omitempty"`
+	HeightPixels int    `json:"heightPixels,omitempty"`
 }
 
 type UpdatedIntent struct {
