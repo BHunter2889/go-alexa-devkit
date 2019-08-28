@@ -100,10 +100,17 @@ type Directive struct {
 // `json:"datasources,omitempty"`
 type DataSources struct {
 	TemplateData struct {
+		// These can have any name, any number of props you want, and aren't required.
+		// It only matters how you reference them from the APL document.
+		// Using common basic elements for now so as not to overcomplicate.
 		Properties struct {
 			BackgroundImage struct {
 				Sources []ImageSource `json:"sources"`
-			} `json:"backgroundImage"`
+			} `json:"backgroundImage,omitempty"`
+			Title   string `json:"title,omitempty"`
+			LogoURL string `json:"logoUrl,omitempty"`
+			Image   string `json:"image,omitempty"`
+			SSML    string `json:"ssml,omitempty"`
 		} `json:"properties"`
 		Transformers []Transformer `json:"transformers,omitempty"`
 	} `json:"templateData,omitempty"`
