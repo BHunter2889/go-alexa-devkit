@@ -113,34 +113,33 @@ type APLDocument struct {
 	MainTemplate struct {
 		Description string   `json:"description,omitempty"`
 		Parameters  []string `json:"parameters,omitempty"`
-		Items       []struct {
-			When      string `json:"when,omitempty"`
-			Type      string `json:"type"`
-			Direction string `json:"direction,omitempty"`
-			Width     string `json:"width,omitempty"`
-			Height    string `json:"height,omitempty"`
-			Items     []struct {
-				Type                   string `json:"type"`
-				Source                 string `json:"source,omitempty"`
-				OverlayColor           string `json:"overlayColor,omitempty"`
-				Position               string `json:"position,omitempty"`
-				Width                  string `json:"width,omitempty"`
-				Height                 string `json:"height,omitempty"`
-				Scale                  string `json:"scale,omitempty"`
-				HeaderTitle            string `json:"headerTitle,omitempty"`
-				HeaderAttributionImage string `json:"headerAttributionImage,omitempty"`
-				Grow                   int    `json:"grow,omitempty"`
-				PaddingLeft            string `json:"paddingLeft,omitempty"`
-				PaddingRight           string `json:"paddingRight,omitempty"`
-				PaddingBottom          string `json:"paddingBottom,omitempty"`
-				Items                  []struct {
-					Type     string `json:"type"`
-					Text     string `json:"text,omitempty"`
-					FontSize string `json:"fontSize,omitempty"`
-					Spacing  string `json:"spacing,omitempty"`
-					Style    string `json:"style,omitempty"`
-				} `json:"items,omitempty"`
-			} `json:"items,omitempty"`
-		} `json:"items,omitempty"`
+		Items       []Item   `json:"items,omitempty"`
 	} `json:"mainTemplate,omitempty"`
+}
+
+type Item struct {
+	Type                   string `json:"type"`
+	When                   string `json:"when,omitempty"`
+	Direction              string `json:"direction,omitempty"`
+	Source                 string `json:"source,omitempty"`
+	OverlayColor           string `json:"overlayColor,omitempty"`
+	Position               string `json:"position,omitempty"`
+	Align                  string `json:"align,omitempty"`
+	Width                  string `json:"width,omitempty"`
+	Height                 string `json:"height,omitempty"`
+	Scale                  string `json:"scale,omitempty"`
+	HeaderTitle            string `json:"headerTitle,omitempty"`
+	HeaderAttributionImage string `json:"headerAttributionImage,omitempty"`
+	Grow                   int    `json:"grow,omitempty"`
+	Spacing                string `json:"spacing,omitempty"`
+	PaddingLeft            string `json:"paddingLeft,omitempty"`
+	PaddingRight           string `json:"paddingRight,omitempty"`
+	PaddingBottom          string `json:"paddingBottom,omitempty"`
+	Text                   string `json:"text,omitempty"`
+	FontSize               string `json:"fontSize,omitempty"`
+	Style                  string `json:"style,omitempty"`
+	Color                  string `json:"color,omitempty"`
+	Shrink                 string `json:"shrink,omitempty"`
+	Items                  []Item `json:"items,omitempty"`
+	Item                   []Item `json:"item,omitempty"` // Yes, at present they expect this to be singular when the array contains one item. -_-
 }

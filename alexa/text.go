@@ -20,16 +20,16 @@ func (d *Directive) SetBodyContentTitleText(title string) {
 	d.DataSources.BodyTemplateData.TextContent.Title.Type = PlainText
 }
 
-func (d *Directive) SetBodyContentPrimaryText(primaryText string) {
-	d.DataSources.TemplateData.Properties.PrimaryText = primaryText
-	d.DataSources.BodyTemplateData.TextContent.PrimaryText.Text = primaryText
-	d.DataSources.BodyTemplateData.TextContent.PrimaryText.Type = PlainText
-}
-
 func (d *Directive) SetBodyContentSubtitle(subtitle string) {
 	d.DataSources.TemplateData.Properties.Subtitle = subtitle
 	d.DataSources.BodyTemplateData.TextContent.SubTitle.Text = subtitle
 	d.DataSources.BodyTemplateData.TextContent.SubTitle.Type = PlainText
+}
+
+func (d *Directive) SetBodyContentPrimaryText(primaryText string) {
+	d.DataSources.TemplateData.Properties.PrimaryText = primaryText
+	d.DataSources.BodyTemplateData.TextContent.PrimaryText.Text = primaryText
+	d.DataSources.BodyTemplateData.TextContent.PrimaryText.Type = PlainText
 }
 
 func (d *Directive) AddBodyContentBullets(bulletStrings ...string) {

@@ -4,14 +4,7 @@ import (
 	"github.com/BHunter2889/go-alexa-devkit/alexa/apl"
 )
 
-type transformer string
-
 const renderDirectiveType = "Alexa.Presentation.APL.RenderDocument"
-
-const (
-	SSMLToSpeech transformer = "ssmlToSpeech"
-	SSMLToText   transformer = "ssmlToText"
-)
 
 type Directives struct {
 	Directives []Directive
