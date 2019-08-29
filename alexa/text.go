@@ -14,6 +14,12 @@ func NewBulletPoint(bulletText string) string {
 	return fmt.Sprintf("• %s", bulletText)
 }
 
+func (d *Directive) SetBodyContentSubheader(subheader string) {
+	d.DataSources.TemplateData.Properties.Subheader = subheader
+	d.DataSources.BodyTemplateData.TextContent.Subheader.Text = subheader
+	d.DataSources.BodyTemplateData.TextContent.Subheader.Type = PlainText
+}
+
 func (d *Directive) SetBodyContentTitleText(title string) {
 	d.DataSources.TemplateData.Properties.Title = title
 	d.DataSources.BodyTemplateData.TextContent.Title.Text = title
@@ -22,8 +28,8 @@ func (d *Directive) SetBodyContentTitleText(title string) {
 
 func (d *Directive) SetBodyContentSubtitle(subtitle string) {
 	d.DataSources.TemplateData.Properties.Subtitle = subtitle
-	d.DataSources.BodyTemplateData.TextContent.SubTitle.Text = subtitle
-	d.DataSources.BodyTemplateData.TextContent.SubTitle.Type = PlainText
+	d.DataSources.BodyTemplateData.TextContent.Subtitle.Text = subtitle
+	d.DataSources.BodyTemplateData.TextContent.Subtitle.Type = PlainText
 }
 
 func (d *Directive) SetBodyContentPrimaryText(primaryText string) {

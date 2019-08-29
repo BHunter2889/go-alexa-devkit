@@ -10,6 +10,7 @@ type DataSources struct {
 			BackgroundImage struct {
 				Sources []ImageSource `json:"sources"`
 			} `json:"backgroundImage,omitempty"`
+			Subheader   string   `json:"subheader,omitempty"`
 			Title       string   `json:"title,omitempty"`
 			Subtitle    string   `json:"subtitle,omitempty"`
 			PrimaryText string   `json:"primaryText,omitempty"`
@@ -25,14 +26,17 @@ type DataSources struct {
 		Type            string      `json:"type"`
 		ObjectID        interface{} `json:"objectId,omitempty"`
 		BackgroundImage APLImage    `json:"backgroundImage,omitempty"`
+		Image           APLImage    `json:"image,omitempty"`
 		Title           string      `json:"title,omitempty"` // Intent Response title Heading to display
 		TextContent     struct {
+			Subheader    TextElement   `json:"subheader,omitempty"`
 			Title        TextElement   `json:"title,omitempty"`
-			SubTitle     TextElement   `json:"subtitle,omitempty"`
+			Subtitle     TextElement   `json:"subtitle,omitempty"`
 			PrimaryText  TextElement   `json:"primaryText,omitempty"`
 			BulletPoints []TextElement `json:"bulletPoints,omitempty"` // Must add the bullet character (i.e.: "•") yourself.
 		} `json:"textContent,omitempty"`
-		LogoURL string `json:"logoUrl,omitempty"`
+		LogoURL  string `json:"logoUrl,omitempty"`
+		HintText string `json:"hintText,omitempty"`
 	} `json:"bodyTemplateData,omitempty"` // NOTE: Depending on the template used, i.e. from the  Alexa Developer Portal APL template generator tool, this may have a different name.
 	// TODO - create dynamic extraction/unmarshalling of this inconsistently named object source.
 }

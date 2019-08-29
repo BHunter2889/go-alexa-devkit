@@ -39,6 +39,7 @@ type APLDocument struct {
 		Name    string `json:"name"`
 		Version string `json:"version"`
 	} `json:"import,omitempty"`
+	Settings  struct{} `json:"settings,omitempty"`
 	Resources []struct {
 		Description string `json:"description,omitempty"`
 		When        string `json:"when,omitempty"`
@@ -46,12 +47,7 @@ type APLDocument struct {
 			ColorTextPrimary       string `json:"colorTextPrimary,omitempty"`
 			ColorBackgroundOverlay string `json:"colorBackgroundOverlay,omitempty"`
 		} `json:"colors,omitempty"`
-		Dimensions struct {
-			TextSizeBody          int `json:"textSizeBody,omitempty"`
-			TextSizePrimary       int `json:"textSizePrimary,omitempty"`
-			TextSizeSecondary     int `json:"textSizeSecondary,omitempty"`
-			TextSizeSecondaryHint int `json:"textSizeSecondaryHint,omitempty"`
-		} `json:"dimensions,omitempty"`
+		Dimensions Dimensions `json:"dimensions,omitempty"`
 	} `json:"resources,omitempty"`
 	Styles struct {
 		TextStyleBase struct {
@@ -80,6 +76,12 @@ type APLDocument struct {
 				FontSize string `json:"fontSize,omitempty"`
 			} `json:"values,omitempty"`
 		} `json:"mixinBody,omitempty"`
+		MixinBodySecondary struct {
+			Values struct {
+				FontSize   string `json:"fontSize"`
+				FontWeight int    `json:"fontWeight"`
+			} `json:"values"`
+		} `json:"mixinBodySecondary,omitempty"`
 		MixinPrimary struct {
 			Values struct {
 				FontSize string `json:"fontSize,omitempty"`
@@ -99,6 +101,9 @@ type APLDocument struct {
 		TextStyleBody struct {
 			Extend []string `json:"extend,omitempty"`
 		} `json:"textStyleBody,omitempty"`
+		TextStyleBodySecondary struct {
+			Extend []string `json:"extend,omitempty"`
+		} `json:"textStyleBodySecondary,omitempty"`
 		TextStyleSecondaryHint struct {
 			Values struct {
 				FontFamily string `json:"fontFamily,omitempty"`
@@ -108,6 +113,11 @@ type APLDocument struct {
 			} `json:"values,omitempty"`
 		} `json:"textStyleSecondaryHint,omitempty"`
 	} `json:"styles,omitempty"`
+	OnMount  []interface{} `json:"onMount"`
+	Graphics struct {
+	} `json:"graphics"`
+	Commands struct {
+	} `json:"commands"`
 	Layouts struct {
 	} `json:"layouts,omitempty"`
 	MainTemplate struct {
@@ -115,6 +125,34 @@ type APLDocument struct {
 		Parameters  []string `json:"parameters,omitempty"`
 		Items       []Item   `json:"items,omitempty"`
 	} `json:"mainTemplate,omitempty"`
+}
+
+// `json:"dimensions,omitempty"`
+type Dimensions struct {
+	TextSizeBody          int `json:"textSizeBody,omitempty"`
+	TextSizeBodySecondary int `json:"textSizeBodySecondary,omitempty"`
+	TextSizePrimary       int `json:"textSizePrimary,omitempty"`
+	TextSizeSecondary     int `json:"textSizeSecondary,omitempty"`
+	TextSizeSecondaryHint int `json:"textSizeSecondaryHint,omitempty"`
+	SpacingThin           int `json:"spacingThin,omitempty"`
+	SpacingSmall          int `json:"spacingSmall,omitempty"`
+	SpacingMedium         int `json:"spacingMedium,omitempty"`
+	SpacingLarge          int `json:"spacingLarge,omitempty"`
+	SpacingExtraLarge     int `json:"spacingExtraLarge,omitempty"`
+	MarginTop             int `json:"marginTop,omitempty"`
+	MarginLeft            int `json:"marginLeft,omitempty"`
+	MarginRight           int `json:"marginRight,omitempty"`
+	MarginBottom          int `json:"marginBottom,omitempty"`
+	PaddingLeft           int `json:"paddingLeft,omitempty"`
+	PaddingRight          int `json:"paddingRight,omitempty"`
+	PaddingBottom         int `json:"paddingBottom,omitempty"`
+	PaddingTop            int `json:"paddingTop,omitempty"`
+	PaddingLeft40         int `json:"paddingLeft40,omitempty"`
+	PaddingRight72        int `json:"paddingRight72,omitempty"`
+	PaddingTop40          int `json:"paddingTop40,omitempty"`
+	PaddingTop50          int `json:"paddingTop50,omitempty"`
+	PrimaryTextPaddingTop int `json:"primaryTextPaddingTop,omitempty"`
+	BulletPointPaddingTop int `json:"bulletPointPaddingTop,omitempty"`
 }
 
 type Item struct {
@@ -125,21 +163,24 @@ type Item struct {
 	OverlayColor           string `json:"overlayColor,omitempty"`
 	Position               string `json:"position,omitempty"`
 	Align                  string `json:"align,omitempty"`
+	AlignItems             string `json:"alignItems,omitempty"`
 	Width                  string `json:"width,omitempty"`
 	Height                 string `json:"height,omitempty"`
 	Scale                  string `json:"scale,omitempty"`
 	HeaderTitle            string `json:"headerTitle,omitempty"`
 	HeaderAttributionImage string `json:"headerAttributionImage,omitempty"`
 	Grow                   int    `json:"grow,omitempty"`
+	Shrink                 int    `json:"shrink,omitempty"`
 	Spacing                string `json:"spacing,omitempty"`
 	PaddingLeft            string `json:"paddingLeft,omitempty"`
 	PaddingRight           string `json:"paddingRight,omitempty"`
 	PaddingBottom          string `json:"paddingBottom,omitempty"`
+	PaddingTop             string `json:"paddingTop,omitempty"`
 	Text                   string `json:"text,omitempty"`
+	TextAlign              string `json:"textAlign,omitempty"`
 	FontSize               string `json:"fontSize,omitempty"`
 	Style                  string `json:"style,omitempty"`
 	Color                  string `json:"color,omitempty"`
-	Shrink                 string `json:"shrink,omitempty"`
 	Items                  []Item `json:"items,omitempty"`
 	Item                   []Item `json:"item,omitempty"` // Yes, at present they expect this to be singular when the array contains one item. -_-
 }
