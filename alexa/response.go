@@ -2,6 +2,7 @@ package alexa
 
 import (
 	"log"
+	"fmt"
 )
 
 func NewSimpleResponse(title string, text string) Response {
@@ -23,14 +24,14 @@ func NewSimpleResponse(title string, text string) Response {
 	return r
 }
 
-func NewPermissionsRequestResponse() Response {
+func NewPermissionsRequestResponse(skillName string) Response {
 	var builder SSMLBuilder
-	builder.Say("Bug Caster was unable to access your device's zip code and country information. ")
+	builder.Say(fmt.Sprintf("%s was unable to access your device's zip code and country information. ", skillName))
 	builder.Pause("750")
-	builder.Say("If you have not enabled Bug Caster to access this information, ")
+	builder.Say(fmt.Sprintf("If you have not enabled %s to access this information, ", skillName))
 	builder.Pause("150")
-	builder.Say("Please check your Alexa App to grant permission for Bug Caster to access your zip code and country " +
-		"information so that the fishing forecast for your area may be determined. ")
+	builder.Say(fmt.Sprintf("Please check your Alexa App to grant permission for %s to access your zip code and country " +
+				"information to enable full interaction capabilities. ", skillName))
 	r := Response{
 		Version: "1.0",
 		Body: ResBody{
@@ -49,17 +50,17 @@ func NewPermissionsRequestResponse() Response {
 	return r
 }
 
-func NewUnsupportedLocationResponse() Response {
+func NewUnsupportedLocationResponse(skillName string) Response {
 	var builder SSMLBuilder
-	builder.Say("Bug Caster does not currently support device locales listed outside the United States or Canada. ")
+	builder.Say(fmt.Sprintf("%s does not currently support devices in your location. ", skillName))
 	builder.Pause("750")
 	builder.Say("If you would like us to provide support for your locale, ")
 	builder.Pause("150")
-	builder.Say("Please leave feedback on the Bug Caster skill page in the Alexa App Skill Store with your country or locale information. ")
+	builder.Say(fmt.Sprintf("Please leave feedback on the %s skill page in the Alexa App Skill Store with your country or locale information. ", skillName))
 	builder.Pause("750")
 	builder.Say("If you are presently in a supported locale, you may need to alter your device's settings in the Alexa App.")
 	builder.Pause("500")
-	builder.Say("Bug Caster apologizes for the inconvenience.")
+	builder.Say(fmt.Sprintf("The %s team apologizes for the inconvenience.", skillName))
 
 	r := Response{
 		Version: "1.0",
@@ -80,38 +81,28 @@ func NewUnsupportedLocationResponse() Response {
 	return r
 }
 
-func NewLaunchRequestGetPermissionsResponse() Response {
+func NewLaunchRequestGetPermissionsResponse(skillName string, features []string) Response {
 	var builder SSMLBuilder
-	builder.Say("Welcome to Bug Caster!")
+	builder.Say(fmt.Sprintf("Welcome to %s!", skillName))
 	builder.Pause("1000")
-	builder.Say("Bug Caster uses solunar theory and applied analytics to determine how probable fish activity translates to quality of fishing by the hour.")
-	builder.Pause("1000")
-	builder.Say("Bug Caster will need to access your device's zip code and country information. ")
+	builder.Say(fmt.Sprintf("%s will need to access your device's zip code and country information. ", skillName))
 	builder.Pause("750")
-	builder.Say("If you have not already enabled Bug Caster to access this information, ")
+	builder.Say(fmt.Sprintf("If you have not already enabled %s to access this information, ", skillName))
 	builder.Pause("150")
-	builder.Say("Please check your Alexa App to grant permission for Bug Caster to access your zip code and country " +
-		"information so that the fishing forecast for your area may be determined. ")
+	builder.Say(fmt.Sprintf("Please check your Alexa App to grant permission for %s to access your zip code and country " +
+				"information in order to have full feature capabilities. ", skillNAme))
 	builder.Pause("750")
 	builder.Say("Currently, ")
 	builder.Pause("100")
 	builder.Say("once you have granted this permission, ")
 	builder.Pause("100")
-	builder.Say("You can have Alexa ask Bug Caster for your fishing forecast, ")
+	builder.Say(fmt.Sprintf("You can have Alexa ask %s %s, ", skillName, features[0]))
 	builder.Pause("150")
-	builder.Say("or how the fishing is, ")
+	builder.Say(fmt.Sprintf("or %s, ", features[1]))
 	builder.Pause("150")
-	builder.Say("and get the best time to go fishing over the next couple of hours with a summarized rating and projected wind speed. ")
+	builder.Say(fmt.Sprintf("and %s. ", features[2]))
 	builder.Pause("1000")
-	builder.Say("New features will be coming soon, ")
-	builder.Pause("150")
-	builder.Say("including the ability to ask for a forecast for a specific time and location, ")
-	builder.Pause("150")
-	builder.Say("the best time during a specified range or normal daylight hours, ")
-	builder.Pause("150")
-	builder.Say("and potentially premium content such as a weekly forecast summary with graphic display. ")
-	builder.Pause("1000")
-	builder.Say("We hope Bug Caster improves your fishing experiences and appreciate any feedback through reviews on the skill page in the Alexa Skill Store! ")
+	builder.Say(fmt.Sprintf("We hope %s fulfills or exceeeds your expectations and appreciate any feedback through reviews on the skill page in the Alexa Skill Store! ")
 	r := Response{
 		Version: "1.0",
 		Body: ResBody{
@@ -130,15 +121,15 @@ func NewLaunchRequestGetPermissionsResponse() Response {
 	return r
 }
 
-func NewDefaultErrorResponse() Response {
+func NewDefaultErrorResponse(skillName string) Response {
 	var builder SSMLBuilder
-	builder.Say("Bug Caster caught a snag downstream while processing your request. ")
+	builder.Say(fmt.Sprintf("%s encountered some issues while processing your request. ", skillName))
 	builder.Pause("750")
-	builder.Say("I can't blame the wind, ")
+	builder.Say(fmt.Sprintf("The problem has been recorded and will be checked out by the %s team, ", skillName))
 	builder.Pause("100")
-	builder.Say("So please accept my apologies for the inconvenience. ")
+	builder.Say("So, please accept our apologies for the inconvenience. ")
 	builder.Pause("500")
-	builder.Say("Please try Bug Caster again later.")
+	builder.Say(fmt.Sprintf("Please try %s again later.", skillName))
 
 	r := Response{
 		Version: "1.0",
@@ -149,7 +140,7 @@ func NewDefaultErrorResponse() Response {
 			},
 			Card: &Payload{
 				Type:  "Simple",
-				Title: "BugCaster Under Maintenance",
+				Title: fmt.Sprintf("%s Under Maintenance", skillName),
 				Text:  builder.Build(),
 			},
 			ShouldEndSession: true,
