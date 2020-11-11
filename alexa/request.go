@@ -1,5 +1,6 @@
 package alexa
 
+// This contents of this package were initially partially based on the work of a few other Gophers:
 // Credit - Nic Raboy: Modified version of Arien Malec's work
 // https://github.com/nraboy/alexa-slick-dealer/blob/master/alexa/request.go
 // https://github.com/arienmalec/alexa-go
