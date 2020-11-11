@@ -13,7 +13,9 @@ _More Documentation Forthcomming._
 - The `apl` package provides support for the Alexa Presentation Language (APL) for devices with screens.
   - Provides support for parsing an apl template `.json` file.
     -`apl` package function is broken. Use the `alexa.ExtractNewRenderDocDirectiveFromJson()` function in `alexa/directives-builder.go`
-  - Structs for working with an APL Document.
+  - Structs for working with an APL Document.'
+- The `services` package provides a simple struct and service for constructing and exectuting a request for basic location permissions.
+  -`DeviceService` struct would also work as a basis for extending to make other permissions requests.
 - Additional features are also supported. 
 
 ### **If you see a missing feature, please feel free to create an issue and/or a PR to request the change. Currently only being added as the need/request arises.**
