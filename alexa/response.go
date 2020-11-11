@@ -90,7 +90,7 @@ func NewLaunchRequestGetPermissionsResponse(skillName string, features []string)
 	builder.Say(fmt.Sprintf("If you have not already enabled %s to access this information, ", skillName))
 	builder.Pause("150")
 	builder.Say(fmt.Sprintf("Please check your Alexa App to grant permission for %s to access your zip code and country " +
-				"information in order to have full feature capabilities. ", skillNAme))
+				"information in order to have full feature capabilities. ", skillName))
 	builder.Pause("750")
 	builder.Say("Currently, ")
 	builder.Pause("100")
